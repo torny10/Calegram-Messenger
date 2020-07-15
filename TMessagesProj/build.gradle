@@ -39,12 +39,22 @@ dependencies {
     implementation files('libs/libgsaverification-client.aar')
 }
 
+
+def keystoreConfigFilePath = "signing.properties"
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file(keystoreConfigFilePath);
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.3'
     ndkVersion "21.1.6352462"
 
-    defaultConfig.applicationId = "org.telegram.messenger"
+    defaultConfig {
+        applicationId = "com.prism.hider.telegram.messenger"
+
+        resValue 'string', 'package_name', applicationId
+    }
 
     sourceSets.main.jniLibs.srcDirs = ['./jni/']
 
@@ -53,6 +63,8 @@ android {
             path "jni/Android.mk"
         }
     }
+
+
 
     lintOptions {
         disable 'MissingTranslation'
@@ -71,17 +83,27 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("config/release.keystore")
-            storePassword RELEASE_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
+//            storeFile file("config/release.keystore")
+//            storePassword RELEASE_STORE_PASSWORD
+//            keyAlias RELEASE_KEY_ALIAS
+//            keyPassword RELEASE_KEY_PASSWORD
+
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
 
         release {
-            storeFile file("config/release.keystore")
-            storePassword RELEASE_STORE_PASSWORD
-            keyAlias RELEASE_KEY_ALIAS
-            keyPassword RELEASE_KEY_PASSWORD
+//            storeFile file("config/release.keystore")
+//            storePassword RELEASE_STORE_PASSWORD
+//            keyAlias RELEASE_KEY_ALIAS
+//            keyPassword RELEASE_KEY_PASSWORD
+
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -145,6 +167,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 
     sourceSets.debug {
         manifest.srcFile 'config/debug/AndroidManifest.xml'
