@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hider_disguise_hint_title">Enable Disguise Mode</string>
+    <string name="hider_disguise_hint_msg"><![CDATA[To disguise this app as a Calculator, <b>Enable Disguise Mode</b> in <b>Disguise Settings</b>.]]></string>
+</resources>

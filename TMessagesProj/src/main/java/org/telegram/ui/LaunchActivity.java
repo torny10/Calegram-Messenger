@@ -516,6 +516,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     SettingsActivity fragment = new SettingsActivity();
                     presentFragment(fragment);
                     drawerLayoutContainer.closeDrawer(false);
+                } else if (id == 19) {
+                    DisguiseSettingsActivity fragment = new DisguiseSettingsActivity();
+                    presentFragment(fragment);
+                    drawerLayoutContainer.closeDrawer(false);
                 } else if (id == 9) {
                     Browser.openUrl(LaunchActivity.this, LocaleController.getString("TelegramFaqUrl", R.string.TelegramFaqUrl));
                     drawerLayoutContainer.closeDrawer(false);
@@ -589,6 +593,12 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                                 SettingsActivity settings = new SettingsActivity();
                                 actionBarLayout.addFragmentToStack(settings);
                                 settings.restoreSelfArgs(savedInstanceState);
+                                break;
+                            }
+                            case "disguise": {
+                                DisguiseSettingsActivity activity = new DisguiseSettingsActivity();
+                                actionBarLayout.addFragmentToStack(activity);
+                                activity.restoreSelfArgs(savedInstanceState);
                                 break;
                             }
                             case "group":
@@ -3692,6 +3702,8 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     outState.putString("fragment", "chat");
                 } else if (lastFragment instanceof SettingsActivity) {
                     outState.putString("fragment", "settings");
+                } else if (lastFragment instanceof DisguiseSettingsActivity) {
+                    outState.putString("fragment", "disguise");
                 } else if (lastFragment instanceof GroupCreateFinalActivity && args != null) {
                     outState.putBundle("args", args);
                     outState.putString("fragment", "group");

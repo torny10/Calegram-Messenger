@@ -174,6 +174,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int bioRow;
     private int settingsSectionRow;
     private int settingsSectionRow2;
+    private int disguiseRow;
     private int notificationRow;
     private int languageRow;
     private int privacyRow;
@@ -440,7 +441,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         listView.setLayoutAnimation(null);
         listView.setClipToPadding(false);
         listView.setOnItemClickListener((view, position) -> {
-            if (position == notificationRow) {
+            if (position == disguiseRow) {
+                presentFragment(new DisguiseSettingsActivity());
+            } else if (position == notificationRow) {
                 presentFragment(new NotificationsSettingsActivity());
             } else if (position == privacyRow) {
                 presentFragment(new PrivacySettingsActivity());
@@ -698,7 +701,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         titleTextView.setGravity(Gravity.LEFT);
         titleTextView.setTextColor(Theme.getColor(Theme.key_actionBarDefaultTitle));
         titleTextView.setTypeface(AndroidUtilities.getTypeface("fonts/rmedium.ttf"));
-        titleTextView.setText(BuildVars.DEBUG_VERSION ? "Telegram Beta" : LocaleController.getString("AppName", R.string.AppName));
+        titleTextView.setText(BuildVars.DEBUG_VERSION ? "Calegram Beta" : LocaleController.getString("AppName", R.string.AppName));
         titleTextView.setAlpha(0.0f);
         frameLayout.addView(titleTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP));
 
@@ -805,6 +808,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         bioRow = rowCount++;
         settingsSectionRow = rowCount++;
         settingsSectionRow2 = rowCount++;
+        disguiseRow = rowCount++;
         notificationRow = rowCount++;
         privacyRow = rowCount++;
         dataRow = rowCount++;
@@ -2184,6 +2188,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     TextCell textCell = (TextCell) holder.itemView;
                     if (position == languageRow) {
                         textCell.setTextAndIcon(LocaleController.getString("Language", R.string.Language), R.drawable.menu_language, false);
+                    } else if (position == disguiseRow) {
+                        textCell.setTextAndIcon(mContext.getString(R.string.common_setting_disguise_setting), R.drawable.menu_disguise, true);
                     } else if (position == notificationRow) {
                         textCell.setTextAndIcon(LocaleController.getString("NotificationsAndSounds", R.string.NotificationsAndSounds), R.drawable.menu_notifications, true);
                     } else if (position == privacyRow) {
@@ -2269,7 +2275,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     position == versionRow || position == dataRow || position == chatRow ||
                     position == questionRow || position == devicesRow || position == filtersRow ||
                     position == faqRow || position == policyRow || position == sendLogsRow ||
-                    position == clearLogsRow || position == switchBackendRow;
+                    position == clearLogsRow || position == switchBackendRow || position == disguiseRow;
         }
 
         @Override
@@ -2355,7 +2361,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     position == dataRow || position == chatRow || position == questionRow ||
                     position == devicesRow || position == filtersRow || position == faqRow ||
                     position == policyRow || position == sendLogsRow || position == clearLogsRow ||
-                    position == switchBackendRow) {
+                    position == switchBackendRow || position == disguiseRow) {
                 return 2;
             } else if (position == versionRow) {
                 return 5;

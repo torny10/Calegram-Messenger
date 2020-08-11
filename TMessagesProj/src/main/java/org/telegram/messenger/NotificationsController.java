@@ -2776,7 +2776,8 @@ public class NotificationsController extends BaseController {
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ApplicationLoader.applicationContext)
                     .setContentTitle(name)
-                    .setSmallIcon(R.drawable.notification)
+//                    .setSmallIcon(R.drawable.notification)
+                    .setSmallIcon(R.drawable.hider_notification_bubble)
                     .setAutoCancel(true)
                     .setNumber(total_unread_count)
                     .setContentIntent(contentIntent)
@@ -3506,7 +3507,8 @@ public class NotificationsController extends BaseController {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(ApplicationLoader.applicationContext)
                     .setContentTitle(name)
-                    .setSmallIcon(R.drawable.notification)
+//                    .setSmallIcon(R.drawable.notification)
+                    .setSmallIcon(R.drawable.hider_notification_bubble)
                     .setContentText(text.toString())
                     .setAutoCancel(true)
                     .setNumber(messageObjects.size())

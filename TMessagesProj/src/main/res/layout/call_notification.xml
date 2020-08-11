@@ -25,7 +25,8 @@
 		android:layout_alignRight="@+id/photo"
 		android:layout_marginRight="-2dip"
 		android:layout_marginBottom="-2dip"
-		android:src="@drawable/call_custom_notification_icon"/>
+		android:src="@mipmap/ic_launcher_new"/>
+<!--	android:src="@drawable/call_custom_notification_icon"/>-->
 
 	<LinearLayout
 		android:id="@+id/text_wrap"
@@ -62,7 +63,7 @@
 			android:singleLine="true"
 			android:ellipsize="end"
 			android:gravity="left"
-			tools:text="Telegram Call"/>
+			tools:text="Calegram Call"/>
 
 		<TextView
 			android:id="@+id/subtitle"

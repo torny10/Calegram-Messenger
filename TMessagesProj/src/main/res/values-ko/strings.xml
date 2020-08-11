@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">텔레그램</string>
-    <string name="AppNameBeta">Telegram Beta</string>
+    <string name="AppName">@string/app_name_new</string>
+    <string name="AppNameBeta">@string/app_name_beta_new</string>
     <string name="LanguageName">한국어</string>
     <string name="English">영어</string>
     <string name="LanguageNameInEnglish">한국어</string>
@@ -45,7 +45,7 @@
     <string name="ResetAccountButton">초기화</string>
     <string name="CancelLinkExpired">링크가 폐기되거나 만료되었습니다.</string>
     <string name="CancelLinkSuccess">%1$s 계정 탈퇴 작업이 취소되었습니다. 이제 이 창을 닫으셔도 좋습니다.</string>
-    <string name="OtherLoginCode">Your login code is **%1$s**. Enter it in the Telegram app where you are trying to log in.\n\nDo not give this code to anyone.</string>
+    <string name="OtherLoginCode">Your login code is **%1$s**. Enter it in the Calegram app where you are trying to log in.\n\nDo not give this code to anyone.</string>
     <!--signup view-->
     <string name="YourName">성명</string>
     <string name="RegisterText2">이름을 입력하고 프로필 사진을 추가하세요.</string>
@@ -1833,7 +1833,7 @@
     <string name="AuthAnotherClientInfo2">QR 코드를 받으려면 텔레그램 데스크탑을 실행하세요.</string>
     <string name="AuthAnotherClientInfo3">회원님의 계정을 연결하려면 QR 코드를 스캔하세요.</string>
     <string name="AuthAnotherClientUrl">이 코드는 누군가가 회원님의 텔레그램 계정에 로그인할 수 있도록 하는 데 사용될 수 있습니다.\n\n텔레그램 로그인을 인증하려면, 설정 &gt; 디바이스 &gt; QR 코드 스캔으로 이동하여 코드를 스캔해 주세요.</string>
-    <string name="QRCodePermissionNoCamera">Telegram needs access to your camera so that you can scan QR codes.</string>
+    <string name="QRCodePermissionNoCamera">Calegram needs access to your camera so that you can scan QR codes.</string>
     <!--cache view-->
     <string name="LocalDatabase">로컬 데이터베이스</string>
     <string name="LocalDatabaseClearTextTitle">로컬 데이터베이스 비우기</string>

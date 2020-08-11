@@ -8,6 +8,7 @@
 
 package org.telegram.ui;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
@@ -49,6 +50,11 @@ import java.util.ArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.prism.hider.vault.commons.FingerprintUtils;
+import com.prism.hider.vault.commons.Vault;
+import com.prism.hider.vault.commons.certifier.FingerprintCertifier;
+import com.prism.lib.vault.signal.VaultVariant;
+
 public class PrivacySettingsActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
     private ListAdapter listAdapter;
@@ -58,6 +64,12 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private LinearLayoutManager layoutManager;
 
     private TLRPC.TL_account_password currentPassword;
+
+    private int disguiseSectionRow;
+    private int disguiseModeRow;
+    private int disguiseModeDetailRow;
+    private int resetPinRow;
+    private int useFingerprintRow;
 
     private int privacySectionRow;
     private int blockedRow;
@@ -99,6 +111,12 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private boolean newSuggest;
 
     private boolean[] clear = new boolean[2];
+
+
+
+    private Vault vault;
+//    private boolean isSetup;
+    private boolean isSupportFingerprint;
 
     @Override
     public boolean onFragmentCreate() {
@@ -151,6 +169,11 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
 
     @Override
     public View createView(Context context) {
+
+
+        vault = VaultVariant.instance();
+        boolean isSetup = vault.isSetup(context);
+        isSupportFingerprint  = FingerprintUtils.isSupportFingerprint(context);
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setAllowOverlayTitle(true);
         actionBar.setTitle(LocaleController.getString("PrivacySettings", R.string.PrivacySettings));
@@ -456,6 +479,25 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                 }
             } else if (position == passportRow) {
                 presentFragment(new PassportActivity(PassportActivity.TYPE_PASSWORD, 0, "", "", null, null, null, null, null));
+            } else if (position == disguiseModeRow) {
+                if (view instanceof TextCheckCell) {
+                    TextCheckCell cell = (TextCheckCell) view;
+                    cell.setChecked(!cell.isChecked());
+                    if (cell.isChecked()) {
+                        vault.setupVault(getParentActivity(), false);
+                    } else {
+                        vault.disableVault(getParentActivity());
+                    }
+                }
+
+            } else if (position == useFingerprintRow) {
+                if (view instanceof TextCheckCell) {
+                    TextCheckCell cell = (TextCheckCell) view;
+                    cell.setChecked(!cell.isChecked());
+                    FingerprintCertifier.instance().setEnable(getParentActivity(), cell.isChecked());
+                }
+            } else if (position == resetPinRow) {
+                vault.setupVault(getParentActivity(), true);
             }
         });
 
@@ -484,6 +526,12 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
 
     private void updateRows() {
         rowCount = 0;
+        disguiseSectionRow = rowCount++;
+        disguiseModeRow = rowCount++;
+        disguiseModeDetailRow = rowCount++;
+        resetPinRow = rowCount++;
+        useFingerprintRow = rowCount++;
+
         privacySectionRow = rowCount++;
         blockedRow = rowCount++;
         phoneNumberRow = rowCount++;
@@ -494,7 +542,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
         groupsRow = rowCount++;
         groupsDetailRow = rowCount++;
         securitySectionRow = rowCount++;
-        passcodeRow = rowCount++;
+//        passcodeRow = rowCount++;
+        passcodeRow = -1;
         passwordRow = rowCount++;
         sessionsRow = rowCount++;
         sessionsDetailRow = rowCount++;
@@ -680,6 +729,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                     position == forwardsRow && !getContactsController().getLoadingPrivicyInfo(ContactsController.PRIVACY_RULES_TYPE_FORWARDS) ||
                     position == phoneNumberRow && !getContactsController().getLoadingPrivicyInfo(ContactsController.PRIVACY_RULES_TYPE_PHONE) ||
                     position == deleteAccountRow && !getContactsController().getLoadingDeleteInfo() ||
+                    position == disguiseModeRow ||
+                    (position == resetPinRow && vault.isSetup(mContext) )||
+                    position == useFingerprintRow && vault.isSetup(mContext) ||
                     position == paymentsClearRow || position == secretMapRow || position == contactsSyncRow || position == passportRow || position == contactsDeleteRow || position == contactsSuggestRow;
         }
 
@@ -831,6 +883,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCell.setTextAndValue(LocaleController.getString("MapPreviewProvider", R.string.MapPreviewProvider), value, true);
                     } else if (position == contactsDeleteRow) {
                         textCell.setText(LocaleController.getString("SyncContactsDelete", R.string.SyncContactsDelete), true);
+                    } else if (position == resetPinRow) {
+                        textCell.setText(mContext.getString(R.string.common_setting_reset_pin), false);
                     }
                     break;
                 case 1:
@@ -858,6 +912,9 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         }*/
                         privacyCell.setText(LocaleController.getString("SuggestContactsInfo", R.string.SuggestContactsInfo));
                         privacyCell.setBackgroundDrawable(Theme.getThemedDrawable(mContext, R.drawable.greydivider, Theme.key_windowBackgroundGrayShadow));
+                    } else if (position == disguiseModeDetailRow) {
+                        privacyCell.setText(mContext.getString(R.string.common_setting_desc_disguise_mode));
+                        privacyCell.setBackgroundDrawable(Theme.getThemedDrawable(mContext, R.drawable.greydivider, Theme.key_windowBackgroundGrayShadow));
                     }
                     break;
                 case 2:
@@ -874,6 +931,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         headerCell.setText(LocaleController.getString("PrivacyBots", R.string.PrivacyBots));
                     } else if (position == contactsSectionRow) {
                         headerCell.setText(LocaleController.getString("Contacts", R.string.Contacts));
+                    } else if (position == disguiseSectionRow) {
+                        headerCell.setText(mContext.getString(R.string.common_setting_disguise_setting));
                     }
                     break;
                 case 3:
@@ -884,6 +943,14 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
                         textCheckCell.setTextAndCheck(LocaleController.getString("SyncContacts", R.string.SyncContacts), newSync, true);
                     } else if (position == contactsSuggestRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString("SuggestContacts", R.string.SuggestContacts), newSuggest, false);
+                    } else if (position == disguiseModeRow) {
+                        textCheckCell.setTextAndCheck(mContext.getString(R.string.common_setting_disguise_mode),
+                                vault.isSetup(mContext), true);
+                    } else if (position == useFingerprintRow) {
+                        boolean useFingerprint = vault.isSetup(mContext) && isSupportFingerprint
+                                && FingerprintCertifier.instance().isEnable(mContext);
+                        textCheckCell.setTextAndCheck(mContext.getString(R.string.checkbox_use_fingerprint),
+                                useFingerprint, false);
                     }
                     break;
             }
@@ -891,13 +958,13 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
 
         @Override
         public int getItemViewType(int position) {
-            if (position == passportRow || position == lastSeenRow || position == phoneNumberRow || position == blockedRow || position == deleteAccountRow || position == sessionsRow || position == webSessionsRow || position == passwordRow || position == passcodeRow || position == groupsRow || position == paymentsClearRow || position == secretMapRow || position == contactsDeleteRow || position == clearDraftsRow) {
+            if (position == passportRow || position == lastSeenRow || position == phoneNumberRow || position == blockedRow || position == deleteAccountRow || position == sessionsRow || position == webSessionsRow || position == passwordRow || position == passcodeRow || position == groupsRow || position == paymentsClearRow || position == secretMapRow || position == contactsDeleteRow || position == clearDraftsRow || position == resetPinRow) {
                 return 0;
-            } else if (position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow) {
+            } else if (position == deleteAccountDetailRow || position == groupsDetailRow || position == sessionsDetailRow || position == secretDetailRow || position == botsDetailRow || position == contactsDetailRow || position == disguiseModeDetailRow) {
                 return 1;
-            } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow) {
+            } else if (position == securitySectionRow || position == advancedSectionRow || position == privacySectionRow || position == secretSectionRow || position == botsSectionRow || position == contactsSectionRow || position == disguiseSectionRow) {
                 return 2;
-            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow) {
+            } else if (position == secretWebpageRow || position == contactsSyncRow || position == contactsSuggestRow || position == disguiseModeRow || position == useFingerprintRow) {
                 return 3;
             }
             return 0;

@@ -26,10 +26,20 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.prism.commons.ui.ActivityDelegate;
+import com.prism.commons.ui.ActivityDelegateCallback;
+import com.prism.commons.utils.LogUtils;
+import com.prism.commons.utils.Tag;
+import com.prism.hider.telegram.GlobalActivityDelegate;
+import com.prism.hider.vault.commons.Vault;
+import com.prism.hider.vault.commons.VaultConfig;
+import com.prism.hider.vault.commons.VaultListener;
+import com.prism.lib.vault.signal.VaultVariant;
 
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
@@ -56,6 +66,7 @@ public class ApplicationLoader extends Application {
     public static volatile long mainInterfacePausedStageQueueTime;
 
     public static boolean hasPlayServices;
+    private static final String TAG = Tag.tag(ApplicationLoader.class);
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -202,7 +213,41 @@ public class ApplicationLoader extends Application {
         applicationHandler = new Handler(applicationContext.getMainLooper());
 
         AndroidUtilities.runOnUIThread(ApplicationLoader::startPushService);
+        initializeVault();
     }
+
+    private void initializeVault() {
+        Vault vault = VaultVariant.instance();
+        LogUtils.logPid();
+        String processName = com.prism.commons.utils.ProcessUtils.getCurrentProcessName(this);
+        boolean isMainProcess = BuildConfig.APPLICATION_ID.equals(processName);
+        Log.d(TAG, "initializeVault isMain:" + isMainProcess + " process:" + processName);
+        VaultConfig config = new VaultConfig(this, isMainProcess,BuildConfig.APPLICATION_ID);
+        config.setEnableIconDisguise();
+        config.setEnableTaskDesDisguie();
+        config.setVaultListener(new VaultListener() {
+            @Override
+            public void onSetupVaultFinish(Context context) {
+
+            }
+
+            @Override
+            public void onDisableVaultFinish(Context context) {
+
+            }
+
+            @Override
+            public void onVaultUnlocked(Context context) {
+
+            }
+        });
+        config.setEnableVaultOnOtherProcess(true);
+        config.setForceActivityCounter(true);
+        vault.init(config);
+        ActivityDelegate delegate = new GlobalActivityDelegate();
+        registerActivityLifecycleCallbacks(new ActivityDelegateCallback(delegate));
+    }
+
 
     public static void startPushService() {
         SharedPreferences preferences = MessagesController.getGlobalNotificationsSettings();

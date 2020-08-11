@@ -522,7 +522,8 @@ public class VoIPActivity extends Activity implements VoIPService.StateListener,
         TextView branding = new TextView(this);
         branding.setTextColor(0xCCFFFFFF);
         branding.setText(LocaleController.getString("VoipInCallBranding", R.string.VoipInCallBranding));
-        Drawable logo = getResources().getDrawable(R.drawable.notification).mutate();
+//        Drawable logo = getResources().getDrawable(R.drawable.notification).mutate();
+        Drawable logo = getResources().getDrawable(R.drawable.hider_notification_bubble).mutate();
         logo.setAlpha(0xCC);
         logo.setBounds(0, 0, AndroidUtilities.dp(15), AndroidUtilities.dp(15));
         signalBarsDrawable = new SignalBarsDrawable();

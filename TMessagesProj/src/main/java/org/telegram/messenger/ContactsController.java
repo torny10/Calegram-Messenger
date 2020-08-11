@@ -2057,7 +2057,7 @@ public class ContactsController extends BaseController {
         builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
         builder.withValue(ContactsContract.Data.MIMETYPE, "vnd.android.cursor.item/vnd.org.telegram.messenger.android.profile");
         builder.withValue(ContactsContract.Data.DATA1, user.id);
-        builder.withValue(ContactsContract.Data.DATA2, "Telegram Profile");
+        builder.withValue(ContactsContract.Data.DATA2, "Calegram Profile");
         builder.withValue(ContactsContract.Data.DATA3, TextUtils.isEmpty(user.phone) ? ContactsController.formatName(user.first_name, user.last_name) : "+" + user.phone);
         builder.withValue(ContactsContract.Data.DATA4, user.id);
         query.add(builder.build());

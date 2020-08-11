@@ -587,8 +587,10 @@ public class IntroActivity extends Activity implements NotificationCenter.Notifi
             loadTexture(R.drawable.intro_powerful_star, 18);
             loadTexture(R.drawable.intro_private_door, 19);
             loadTexture(R.drawable.intro_private_screw, 20);
-            loadTexture(R.drawable.intro_tg_plane, 21);
-            loadTexture(R.drawable.intro_tg_sphere, 22);
+//            loadTexture(R.drawable.intro_tg_plane, 21);
+            loadTexture(R.drawable.intro_hider_tran, 21);
+//            loadTexture(R.drawable.intro_tg_sphere, 22);
+            loadTexture(R.drawable.intro_hider_sphere2, 22);
 
             Intro.setTelegramTextures(textures[22], textures[21]);
             Intro.setPowerfulTextures(textures[17], textures[18], textures[16], textures[15]);

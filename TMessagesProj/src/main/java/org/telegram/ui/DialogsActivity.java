@@ -47,6 +47,7 @@ import androidx.recyclerview.widget.LinearSmoothScrollerCustom;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Property;
 import android.util.StateSet;
@@ -70,6 +71,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.android.exoplayer2.util.Log;
+import com.prism.hider.telegram.DisguisePreference;
+import com.prism.lib.vault.signal.VaultVariant;
 
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
@@ -1642,7 +1647,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 actionBar.setTitle(LocaleController.getString("ArchivedChats", R.string.ArchivedChats));
             } else {
                 if (BuildVars.DEBUG_VERSION) {
-                    actionBar.setTitle("Telegram Beta");
+                    actionBar.setTitle("Calegram Beta");
                 } else {
                     actionBar.setTitle(LocaleController.getString("AppName", R.string.AppName));
                 }
@@ -3163,7 +3168,26 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             tosAccepted = false;
             afterSignup = false;
         }
-        if (tosAccepted && checkPermission && !onlySelect && Build.VERSION.SDK_INT >= 23) {
+        Context context = getParentActivity();
+        int disguiseHintCount = 0;
+        boolean disguiseModeEnabled = false;
+        if (context != null) {
+            disguiseHintCount = DisguisePreference.disguiseHintCount.get(context).read();
+            disguiseModeEnabled = VaultVariant.instance().isSetup(context);
+        }
+        if (context != null && (!disguiseModeEnabled) && disguiseHintCount < 3) {
+            Activity activity = getParentActivity();
+            showDialog(new AlertDialog.Builder(activity)
+                    .setTitle(activity.getText(R.string.hider_disguise_hint_title))
+                    .setMessage(Html.fromHtml(activity.getString(R.string.hider_disguise_hint_msg)))
+                    .setPositiveButton(activity.getString(R.string.common_setting_disguise_setting), (dialog, which) -> {
+                        DisguiseSettingsActivity fragment = new DisguiseSettingsActivity();
+                        presentFragment(fragment);
+                    })
+                    .setNegativeButton(activity.getString(R.string.text_dismiss), (dialog, which) -> dialog.dismiss())
+                    .create());
+            DisguisePreference.disguiseHintCount.get(activity).save(disguiseHintCount + 1);
+        } else if (tosAccepted && checkPermission && !onlySelect && Build.VERSION.SDK_INT >= 23) {
             Activity activity = getParentActivity();
             if (activity != null) {
                 checkPermission = false;

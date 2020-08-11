@@ -1787,7 +1787,7 @@ public class ImageLoader {
 
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                telegramPath = new File(Environment.getExternalStorageDirectory(), "Telegram");
+                telegramPath = new File(Environment.getExternalStorageDirectory(), "Calegram");
                 telegramPath.mkdirs();
 
                 if (telegramPath.isDirectory()) {
